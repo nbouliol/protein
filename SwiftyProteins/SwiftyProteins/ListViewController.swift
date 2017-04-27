@@ -8,10 +8,11 @@
 
 import UIKit
 
-class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating {
+class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchDisplayDelegate {
 
+    var searchResult:[String]?
     @IBOutlet weak var listOfLiguands: UITableView!
-    let searchController = UISearchController(searchResultsController: nil)
+//    let searchController = UISearchController(searchResultsController: nil)
 //    @IBOutlet weak var searchText: UISearchBar!
 
     let cacas : [String] = ["caca", "caca", "caca", "caca", "caca", "pipi", "test", "fdp"]
@@ -20,19 +21,13 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         listOfLiguands.delegate = self
         listOfLiguands.dataSource = self
         
-        searchController.searchResultsUpdater = self
-        searchController.dimsBackgroundDuringPresentation = false
-        definesPresentationContext = true
-        listOfLiguands.tableHeaderView = searchController.searchBar
+//        searchController.searchResultsUpdater = self
+//        searchController.dimsBackgroundDuringPresentation = false
+//        definesPresentationContext = true
+//        listOfLiguands.tableHeaderView = searchController.searchBar
         
     }
 
-    func updateSearchResults(for searchController: UISearchController) {
-        let filteredCandies = cacas.filter {
-             $0.lowercased().range(of: searchController.searchBar.text!) != nil
-        }
-        listOfLiguands.reloadData()
-    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -41,9 +36,13 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         
         
     }
-    
+//    https://grokswift.com/swift-tableview-search-bar/
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cacas.count
+        if tableView == self.searchDisplayController!.searchResultsTableView {
+            return self.cacas.count 
+        } else {
+            return self.cacas.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -54,6 +53,23 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         
     }
     
+    
+    func filterContentForSearchText(searchText: String) {
+//        // Filter the array using the filter method
+//        if self.cacas == nil {
+//            self.searchResult = nil
+//            return
+//        }
+        self.searchResult = self.cacas.filter({( caca: String) -> Bool in
+            // to start, let's just search by name
+            return caca.lowercased().range(of: searchText.lowercased()) != nil
+        })
+    }
+    
+    func searchDisplayController(_ controller: UISearchDisplayController, shouldReloadTableForSearch searchString: String?) -> Bool {
+        self.filterContentForSearchText(searchText: searchString!)
+        return true
+    }
     /*
     // MARK: - Navigation
 
