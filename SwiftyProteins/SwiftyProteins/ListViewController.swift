@@ -10,8 +10,10 @@ import UIKit
 
 class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchDisplayDelegate {
 
-    var searchResult:[String]?
+    var searchResult:[String] = []
+    var searchActive : Bool = false
     @IBOutlet weak var listOfLiguands: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
 //    let searchController = UISearchController(searchResultsController: nil)
 //    @IBOutlet weak var searchText: UISearchBar!
 
@@ -20,7 +22,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         super.viewDidLoad()
         listOfLiguands.delegate = self
         listOfLiguands.dataSource = self
-        
+        searchBar.delegate = self
 //        searchController.searchResultsUpdater = self
 //        searchController.dimsBackgroundDuringPresentation = false
 //        definesPresentationContext = true
@@ -32,44 +34,80 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-        
-        
-        
     }
-//    https://grokswift.com/swift-tableview-search-bar/
+
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true;
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false;
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if tableView == self.searchDisplayController!.searchResultsTableView {
-            return self.cacas.count 
+     
+        if (searchActive) {
+            return self.searchResult.count
         } else {
             return self.cacas.count
         }
     }
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        searchResult = cacas.filter({ (text) -> Bool in
+            let tmp: NSString = text as NSString
+            let range = tmp.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            return range.location != NSNotFound
+        })
+        if(searchResult.count == 0){
+            searchActive = false;
+        } else {
+            searchActive = true;
+        }
+        self.listOfLiguands.reloadData()
+    }
+    
+    
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "liguandCell", for: indexPath)
+        let cell = listOfLiguands.dequeueReusableCell(withIdentifier: "liguandCell", for: indexPath)
+        
 //        cell.tuple = (useri?.projects![indexPath.row]["project"]["name"].string, useri?.projects?[indexPath.row]["final_mark"].int)
-        cell.textLabel?.text = cacas[indexPath.row]
+        if (searchActive) {
+            cell.textLabel?.text = searchResult[indexPath.row]
+        } else {
+            cell.textLabel?.text = cacas[indexPath.row]
+        }
         return cell
         
     }
     
     
-    func filterContentForSearchText(searchText: String) {
-//        // Filter the array using the filter method
-//        if self.cacas == nil {
-//            self.searchResult = nil
-//            return
-//        }
-        self.searchResult = self.cacas.filter({( caca: String) -> Bool in
-            // to start, let's just search by name
-            return caca.lowercased().range(of: searchText.lowercased()) != nil
-        })
-    }
+//    func filterContentForSearchText(searchText: String) {
+////        // Filter the array using the filter method
+////        if self.cacas == nil {
+////            self.searchResult = nil
+////            return
+////        }
+//        self.searchResult = self.cacas.filter({( caca: String) -> Bool in
+//            // to start, let's just search by name
+//            return caca.lowercased().range(of: searchText.lowercased()) != nil
+//        })
+//    }
     
-    func searchDisplayController(_ controller: UISearchDisplayController, shouldReloadTableForSearch searchString: String?) -> Bool {
-        self.filterContentForSearchText(searchText: searchString!)
-        return true
-    }
+//    func searchDisplayController(_ controller: UISearchDisplayController, shouldReloadTableForSearch searchString: String?) -> Bool {
+//        self.filterContentForSearchText(searchText: searchString!)
+//        return true
+//    }
     /*
     // MARK: - Navigation
 
