@@ -12,6 +12,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
 
     var searchResult:[String] = []
     var searchActive : Bool = false
+    var currentLigand : String?
     @IBOutlet weak var listOfLiguands: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
 //    let searchController = UISearchController(searchResultsController: nil)
@@ -32,6 +33,8 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         
     }
 
+
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadLiguands()
@@ -72,6 +75,19 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (searchActive) {
+            if searchResult.count == 0 {
+                self.currentLigand = liguands[indexPath.row]
+            } else {
+                self.currentLigand = searchResult[indexPath.row]
+            }
+        } else {
+            self.currentLigand = liguands[indexPath.row]
+        }
+        performSegue(withIdentifier: "segueToProtein", sender: self)
+    }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
         searchResult = liguands.filter({ (text) -> Bool in
@@ -88,12 +104,10 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
     
     
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = listOfLiguands.dequeueReusableCell(withIdentifier: "liguandCell", for: indexPath)
         
 //        cell.tuple = (useri?.projects![indexPath.row]["project"]["name"].string, useri?.projects?[indexPath.row]["final_mark"].int)
-        print(indexPath.row)
         if (searchActive) {
             if searchResult.count == 0 {
                 cell.textLabel?.text = liguands[indexPath.row]
@@ -147,14 +161,19 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
 //        self.filterContentForSearchText(searchText: searchString!)
 //        return true
 //    }
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        if segue.identifier == "segueToProtein" {
+            if let dest = segue.destination as? ProteinViewController {
+                dest.ligVal = self.currentLigand!
+            }
+        }
     }
-    */
+ 
 
 }
