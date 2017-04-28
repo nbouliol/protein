@@ -17,12 +17,14 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
 //    let searchController = UISearchController(searchResultsController: nil)
 //    @IBOutlet weak var searchText: UISearchBar!
 
-    let cacas : [String] = ["caca", "caca", "caca", "caca", "caca", "pipi", "test", "fdp"]
+    var liguands : [String] = []
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         listOfLiguands.delegate = self
         listOfLiguands.dataSource = self
         searchBar.delegate = self
+        
 //        searchController.searchResultsUpdater = self
 //        searchController.dimsBackgroundDuringPresentation = false
 //        definesPresentationContext = true
@@ -30,6 +32,11 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadLiguands()
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -55,15 +62,19 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
      
         if (searchActive) {
-            return self.searchResult.count
+            if searchResult.count == 0 {
+                return self.liguands.count
+            } else {
+                return self.searchResult.count
+            }
         } else {
-            return self.cacas.count
+            return self.liguands.count
         }
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-        searchResult = cacas.filter({ (text) -> Bool in
+        searchResult = liguands.filter({ (text) -> Bool in
             let tmp: NSString = text as NSString
             let range = tmp.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
             return range.location != NSNotFound
@@ -82,15 +93,43 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         let cell = listOfLiguands.dequeueReusableCell(withIdentifier: "liguandCell", for: indexPath)
         
 //        cell.tuple = (useri?.projects![indexPath.row]["project"]["name"].string, useri?.projects?[indexPath.row]["final_mark"].int)
+        print(indexPath.row)
         if (searchActive) {
-            cell.textLabel?.text = searchResult[indexPath.row]
+            if searchResult.count == 0 {
+                cell.textLabel?.text = liguands[indexPath.row]
+            } else {
+                cell.textLabel?.text = searchResult[indexPath.row]
+            }
         } else {
-            cell.textLabel?.text = cacas[indexPath.row]
+            cell.textLabel?.text = liguands[indexPath.row]
         }
         return cell
         
     }
     
+    func loadLiguands()
+    {
+        
+        if let filepath = Bundle.main.path(forResource: "ligands", ofType: "txt")
+        {
+            do
+            {
+                let contents = try String(contentsOfFile: filepath)
+                let lines = contents.components(separatedBy: "\n")
+                self.liguands = lines
+                self.listOfLiguands.reloadData()
+            }
+            catch
+            {
+                print("contents could not be loaded")
+            }
+        }
+        else
+        {
+            print("error : not found")
+        }
+        
+    }
     
 //    func filterContentForSearchText(searchText: String) {
 ////        // Filter the array using the filter method

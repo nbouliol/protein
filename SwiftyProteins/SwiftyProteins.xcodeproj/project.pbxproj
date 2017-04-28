@@ -14,6 +14,7 @@
 		64B74DE71EB2397700F21062 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64B74DE51EB2397700F21062 /* Main.storyboard */; };
 		64B74DE91EB2397700F21062 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64B74DE81EB2397700F21062 /* Assets.xcassets */; };
 		64B74DEC1EB2397700F21062 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64B74DEA1EB2397700F21062 /* LaunchScreen.storyboard */; };
+		64CEBCC81EB369A80080EDB2 /* ligands.txt in Resources */ = {isa = PBXBuildFile; fileRef = 64CEBCC71EB369A80080EDB2 /* ligands.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		64B74DE81EB2397700F21062 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		64B74DEB1EB2397700F21062 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		64B74DED1EB2397700F21062 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		64CEBCC71EB369A80080EDB2 /* ligands.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ligands.txt; path = ../../../Downloads/ligands.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 				64B74DE11EB2397700F21062 /* AppDelegate.swift */,
 				64B74DE31EB2397700F21062 /* ViewController.swift */,
 				647E6E4F1EB24EC000CBD58D /* ListViewController.swift */,
+				64CEBCC71EB369A80080EDB2 /* ligands.txt */,
 				64B74DE51EB2397700F21062 /* Main.storyboard */,
 				64B74DE81EB2397700F21062 /* Assets.xcassets */,
 				64B74DEA1EB2397700F21062 /* LaunchScreen.storyboard */,
@@ -142,6 +145,7 @@
 				64B74DEC1EB2397700F21062 /* LaunchScreen.storyboard in Resources */,
 				64B74DE91EB2397700F21062 /* Assets.xcassets in Resources */,
 				64B74DE71EB2397700F21062 /* Main.storyboard in Resources */,
+				64CEBCC81EB369A80080EDB2 /* ligands.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
