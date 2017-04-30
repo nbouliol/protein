@@ -31,7 +31,7 @@ class ProteinViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let Url = "http://ligand-expo.rcsb.org/reports/0/\(ligVal!)/\(ligVal!)_ideal.pdb"
+        let Url = "http://ligand-expo.rcsb.org/reports/\(ligVal![ligVal!.index(ligVal!.startIndex, offsetBy: 0)])/\(ligVal!)/\(ligVal!)_ideal.pdb"
         
         // Start background thread so that image loading does not make app unresponsive
         guard let myURL = URL(string: Url) else {
@@ -43,6 +43,9 @@ class ProteinViewController: UIViewController {
             let myHTMLString = try String(contentsOf: myURL, encoding: .ascii)
 //            print("HTML : \(myHTMLString)")
             pdbFile = myHTMLString
+            let parser = Parser(pdb: pdbFile!)
+            parser.parse()
+            print(parser.atoms)
         } catch let error {
             print("Error: \(error)")
         }
