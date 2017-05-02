@@ -165,25 +165,33 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X7a-0C-Khu">
-                                <rect key="frame" x="166" y="323" width="42" height="21"/>
+                                <rect key="frame" x="16" y="72" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yg5-zL-ntn">
+                                <rect key="frame" x="0.0" y="101" width="375" height="566"/>
+                            </sceneKitView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="X7a-0C-Khu" firstAttribute="centerX" secondItem="tCG-rV-zsl" secondAttribute="centerX" id="W3p-Cp-17S"/>
-                            <constraint firstItem="X7a-0C-Khu" firstAttribute="centerY" secondItem="tCG-rV-zsl" secondAttribute="centerY" id="rM2-DY-66U"/>
+                            <constraint firstAttribute="trailing" secondItem="yg5-zL-ntn" secondAttribute="trailing" id="Ih3-zd-QVt"/>
+                            <constraint firstItem="yg5-zL-ntn" firstAttribute="bottom" secondItem="KAa-eI-YbH" secondAttribute="top" id="Rbt-Y0-vxG"/>
+                            <constraint firstItem="X7a-0C-Khu" firstAttribute="centerX" secondItem="tCG-rV-zsl" secondAttribute="centerX" constant="-150.5" id="W3p-Cp-17S"/>
+                            <constraint firstItem="yg5-zL-ntn" firstAttribute="top" secondItem="X7a-0C-Khu" secondAttribute="bottom" constant="8" symbolic="YES" id="Y3o-gQ-UCX"/>
+                            <constraint firstItem="yg5-zL-ntn" firstAttribute="leading" secondItem="tCG-rV-zsl" secondAttribute="leading" id="fIm-Va-9pm"/>
+                            <constraint firstItem="X7a-0C-Khu" firstAttribute="centerY" secondItem="tCG-rV-zsl" secondAttribute="centerY" constant="-251" id="rM2-DY-66U"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="sceneView" destination="yg5-zL-ntn" id="RIk-xU-D9f"/>
                         <outlet property="testLabel" destination="X7a-0C-Khu" id="Us1-Zi-qwR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fKt-tc-4Au" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2599" y="1136"/>
+            <point key="canvasLocation" x="2597.5999999999999" y="1135.6821589205399"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="NGW-QY-dys">

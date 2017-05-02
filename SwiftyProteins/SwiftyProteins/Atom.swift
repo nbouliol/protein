@@ -37,9 +37,11 @@ struct Atom {
     var color : UIColor
     var number : Int
     var connections : [Int] = []
+    var coordinates : [Float] = []
     
-    init(name: String, number: Int){
+    init(name: String, number: Int, coords:[Float]){
         self.number = number
+        self.coordinates = coords
         switch name {
         case "H":
             self.name = "Hydrogen"

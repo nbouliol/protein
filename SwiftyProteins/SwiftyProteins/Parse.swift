@@ -37,7 +37,9 @@ class Parser {
             var words = line.components(separatedBy: .whitespaces)
             words = words.filter { $0 != "" }
             if words.count > 0 && words[0] == "ATOM" {
-                atoms.append(Atom(name: words.last!, number: Int(words[1])!))
+                let tmp = words[6...8]
+                let floatArray = tmp.map { Float($0)! }
+                atoms.append(Atom(name: words.last!, number: Int(words[1])!, coords: floatArray))
             } else if words.count > 0 && words[0] == "CONECT" {
                 atoms[Int(words[1])! - 1].connections = words[2..<words.count].map { Int($0)! }
             }
