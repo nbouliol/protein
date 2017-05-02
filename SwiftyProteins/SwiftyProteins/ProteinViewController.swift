@@ -45,7 +45,9 @@ class ProteinViewController: UIViewController {
             pdbFile = myHTMLString
             let parser = Parser(pdb: pdbFile!)
             parser.parse()
-            print(parser.atoms)
+//            print(parser.atoms)
+            print(parser.lines[0])
+            print(parser.atoms[0])
         } catch let error {
             print("Error: \(error)")
         }

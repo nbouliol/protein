@@ -18,13 +18,28 @@ class Parser {
         self.pdbFile = pdb
         self.lines = self.pdbFile.components(separatedBy: .newlines)
     }
-
+    
+    func matches(for regex: String, in text: String) -> [String] {
+        
+        do {
+            let regex = try NSRegularExpression(pattern: regex)
+            let nsString = text as NSString
+            let results = regex.matches(in: text, range: NSRange(location: 0, length: nsString.length))
+            return results.map { nsString.substring(with: $0.range)}
+        } catch let error {
+            print("invalid regex: \(error.localizedDescription)")
+            return []
+        }
+    }
     
     func parse(){
         for line in self.lines {
-            let words = line.components(separatedBy: .whitespaces)
-            if words[0] == "ATOM" {
-                atoms.append(Atom(name: words.last!))
+            var words = line.components(separatedBy: .whitespaces)
+            words = words.filter { $0 != "" }
+            if words.count > 0 && words[0] == "ATOM" {
+                atoms.append(Atom(name: words.last!, number: Int(words[1])!))
+            } else if words.count > 0 && words[0] == "CONECT" {
+                atoms[Int(words[1])! - 1].connections = words[2..<words.count].map { Int($0)! }
             }
         }
     }
