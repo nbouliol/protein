@@ -20,8 +20,9 @@ class ProteinViewController: UIViewController {
     @IBOutlet weak var showAtom: UILabel!
     var geometryNode: SCNNode = SCNNode()
     
-    @IBAction func shareButton(_ sender: Any) {
-        
+    @IBOutlet weak var navItem: UINavigationItem!
+    
+    @IBAction func shareNavButton(_ sender: Any) {
         // set up activity view controller
         let imageToShare = sceneView.snapshot()
         let defaultText = "I want to share with you this protein : \(ligVal!) - Generated with SwiftyProteins"
@@ -29,7 +30,7 @@ class ProteinViewController: UIViewController {
         activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
         
         // exclude some activity types from the list (optional)
-//        activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.postToFacebook ]
+        //        activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.postToFacebook ]
         
         // present the view controller
         self.present(activityViewController, animated: true, completion: nil)
@@ -45,8 +46,10 @@ class ProteinViewController: UIViewController {
         }
         
         do {
+            UIApplication.shared.isNetworkActivityIndicatorVisible = true
             let myHTMLString = try String(contentsOf: myURL, encoding: .ascii)
             //            print("HTML : \(myHTMLString)")
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
             pdbFile = myHTMLString
             let parser = Parser(pdb: pdbFile!)
             parser.parse()
@@ -62,8 +65,8 @@ class ProteinViewController: UIViewController {
         super.viewDidLoad()
 
         loadNparse()
-        
-        testLabel.text = ligVal!
+
+        navItem.title = ligVal!
         sceneSetup()
         geometryNode = self.allAtoms()
         sceneView.scene!.rootNode.addChildNode(geometryNode)
@@ -72,21 +75,7 @@ class ProteinViewController: UIViewController {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapHandler(_:)))
         sceneView.addGestureRecognizer(tapRecognizer)
     }
-
-    @IBOutlet weak var testLabel: UILabel!
-    
-    func panGesture(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: gesture.view!)
-        var newAngle = (Float)(translation.x)*(Float)(M_PI)/180.0
-//        newAngle += currentAngle
-        
-        geometryNode.transform = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
-        
-        if(gesture.state == UIGestureRecognizerState.ended) {
-//            currentAngle = newAngle
-        }
-    }
-    
+  
     func findAtomWithCoordinates(coords: [Float]) -> Atom? {
         for atom in self.Atoms {
             if atom.coordinates == coords {
@@ -120,7 +109,7 @@ class ProteinViewController: UIViewController {
     
 //    https://www.raywenderlich.com/83748/beginning-scene-kit-tutorial
 //    https://www.raywenderlich.com/128728/scene-kit-tutorial-swift-part-4-render-loop
-    
+//    http://stackoverflow.com/questions/30190171/scenekit-object-between-two-points
     func atom(color: UIColor, size: Float) -> SCNGeometry {
         let at = SCNSphere(radius: CGFloat(size))
         at.firstMaterial!.diffuse.contents = color
@@ -135,7 +124,7 @@ class ProteinViewController: UIViewController {
         
         for i in 0..<self.Atoms.count {
             if !ballnstick {
-                let at = SCNNode(geometry: self.atom(color: self.Atoms[i].color, size: 1))
+                let at = SCNNode(geometry: self.atom(color: self.Atoms[i].color, size: 0.9))
                 at.position = SCNVector3Make(self.Atoms[i].coordinates[0], self.Atoms[i].coordinates[1], self.Atoms[i].coordinates[2])
                 self.Atoms[i].node = at
                 atomsNode.addChildNode(at)
