@@ -10,6 +10,7 @@
 		37DA424B1EB5E87900237A08 /* ligands.txt in Resources */ = {isa = PBXBuildFile; fileRef = 37DA424A1EB5E87900237A08 /* ligands.txt */; };
 		37DA424D1EB5E9B600237A08 /* Atom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DA424C1EB5E9B600237A08 /* Atom.swift */; };
 		37DA42511EB5EAB600237A08 /* Parse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37DA42501EB5EAB600237A08 /* Parse.swift */; };
+		641BA6F61EB9F0D00009E0CE /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641BA6F51EB9F0D00009E0CE /* Connection.swift */; };
 		647E6E4C1EB2458F00CBD58D /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 647E6E4B1EB2458F00CBD58D /* LocalAuthentication.framework */; };
 		647E6E501EB24EC000CBD58D /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647E6E4F1EB24EC000CBD58D /* ListViewController.swift */; };
 		64B74DE21EB2397700F21062 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B74DE11EB2397700F21062 /* AppDelegate.swift */; };
@@ -24,6 +25,7 @@
 		37DA424A1EB5E87900237A08 /* ligands.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ligands.txt; sourceTree = "<group>"; };
 		37DA424C1EB5E9B600237A08 /* Atom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atom.swift; sourceTree = "<group>"; };
 		37DA42501EB5EAB600237A08 /* Parse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parse.swift; sourceTree = "<group>"; };
+		641BA6F51EB9F0D00009E0CE /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		647E6E4B1EB2458F00CBD58D /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		647E6E4F1EB24EC000CBD58D /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		64B74DDE1EB2397400F21062 /* SwiftyProteins.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftyProteins.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,6 +88,7 @@
 				64B74DEA1EB2397700F21062 /* LaunchScreen.storyboard */,
 				64B74DED1EB2397700F21062 /* Info.plist */,
 				37DA424C1EB5E9B600237A08 /* Atom.swift */,
+				641BA6F51EB9F0D00009E0CE /* Connection.swift */,
 				37DA42501EB5EAB600237A08 /* Parse.swift */,
 			);
 			path = SwiftyProteins;
@@ -171,6 +174,7 @@
 				37DA424D1EB5E9B600237A08 /* Atom.swift in Sources */,
 				64CEBCCA1EB394F20080EDB2 /* ProteinViewController.swift in Sources */,
 				647E6E501EB24EC000CBD58D /* ListViewController.swift in Sources */,
+				641BA6F61EB9F0D00009E0CE /* Connection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

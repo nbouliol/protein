@@ -14,6 +14,7 @@ class Parser {
     var lines : [String]
     var atoms : [Atom] = []
     
+    
     init(pdb:String) {
         self.pdbFile = pdb
         self.lines = self.pdbFile.components(separatedBy: .newlines)

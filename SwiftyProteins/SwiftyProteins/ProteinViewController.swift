@@ -8,6 +8,7 @@
 
 import UIKit
 import SceneKit
+import MessageUI
 
 class ProteinViewController: UIViewController {
 
@@ -15,7 +16,8 @@ class ProteinViewController: UIViewController {
     var ligVal : String? = ""
     var pdbFile : String? = ""
     var Atoms : [Atom] = []
-    
+    var printedAtom : String = ""
+    @IBOutlet weak var showAtom: UILabel!
     var geometryNode: SCNNode = SCNNode()
     
     // Gestures
@@ -49,14 +51,14 @@ class ProteinViewController: UIViewController {
 
         loadNparse()
         
-        print(self.Atoms)
-        
         testLabel.text = ligVal!
         sceneSetup()
         geometryNode = self.allAtoms()
         sceneView.scene!.rootNode.addChildNode(geometryNode)
-        sceneView.backgroundColor = UIColor.lightGray
+        sceneView.backgroundColor = .random()
         // Do any additional setup after loading the view.
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapHandler(_:)))
+        sceneView.addGestureRecognizer(tapRecognizer)
     }
 
     @IBOutlet weak var testLabel: UILabel!
@@ -75,43 +77,82 @@ class ProteinViewController: UIViewController {
             currentAngle = newAngle
         }
     }
-//    https://www.raywenderlich.com/83748/beginning-scene-kit-tutorial
     
-    func atom(color: UIColor) -> SCNGeometry {
-        let at = SCNSphere(radius: 1)
+    func findAtomWithCoordinates(coords: [Float]) -> Atom? {
+        for atom in self.Atoms {
+            if atom.coordinates == coords {
+                return atom
+            }
+        }
+        return nil
+    }
+    
+    func tapHandler(_ gesture: UITapGestureRecognizer) {
+        print("TAPPED !")
+        
+        // check what nodes are tapped
+        let p = gesture.location(in: sceneView)
+        let hitResults = sceneView.hitTest(p, options: [:])
+        // check that we clicked on at least one object
+        if hitResults.count > 0 {
+            // retrieved the first clicked object
+            let result: AnyObject = hitResults[0]
+            print(result.node)
+            // result.node is the node that the user tapped on
+            // perform any actions you want on it
+            if let tappedAtom = findAtomWithCoordinates(coords: [result.node.position.x, result.node.position.y, result.node.position.z]) {
+                print(tappedAtom.name)
+                showAtom.text = "Touched atom : \(tappedAtom.name)"
+            }
+        } else {
+            showAtom.text = ""
+        }
+    }
+    
+//    https://www.raywenderlich.com/83748/beginning-scene-kit-tutorial
+//    https://www.raywenderlich.com/128728/scene-kit-tutorial-swift-part-4-render-loop
+    
+    func atom(color: UIColor, size: Float) -> SCNGeometry {
+        let at = SCNSphere(radius: CGFloat(size))
         at.firstMaterial!.diffuse.contents = color
         at.firstMaterial?.specular.contents = color == .white ? UIColor.darkGray : UIColor.white
         return at
     }
     
-    func allAtoms() -> SCNNode {
+    func allAtoms(ballnstick: Bool = true) -> SCNNode {
         let atomsNode = SCNNode()
-        
-        let carbonNode = SCNNode(geometry: atom(color: .red))
-        carbonNode.position = SCNVector3Make(-6, 1, 5)
-        atomsNode.addChildNode(carbonNode)
-        
-        let hydrogenNode = SCNNode(geometry: atom(color: .blue))
-        hydrogenNode.position = SCNVector3Make(-2, 2, 0)
-        atomsNode.addChildNode(hydrogenNode)
-        
-        let oxygenNode = SCNNode(geometry: atom(color: .alkaliniMetals))
-        oxygenNode.position = SCNVector3Make(+2, 3, 0)
-        atomsNode.addChildNode(oxygenNode)
-        
-        let fluorineNode = SCNNode(geometry: atom(color: .boron))
-        fluorineNode.position = SCNVector3Make(+6, 4, 0)
-        atomsNode.addChildNode(fluorineNode)
 
-        for atom in self.Atoms {
-            print("caca")
-            let at = SCNNode(geometry: self.atom(color: atom.color))
-            at.position = SCNVector3Make(atom.coordinates[0], atom.coordinates[1], atom.coordinates[2])
-            print(at)
-            atomsNode.addChildNode(at)
+        for i in 0..<self.Atoms.count {
+            if !ballnstick {
+                let at = SCNNode(geometry: self.atom(color: self.Atoms[i].color, size: 1))
+                at.position = SCNVector3Make(self.Atoms[i].coordinates[0], self.Atoms[i].coordinates[1], self.Atoms[i].coordinates[2])
+                self.Atoms[i].node = at
+                atomsNode.addChildNode(at)
+            } else {
+                let at = SCNNode(geometry: self.atom(color: self.Atoms[i].color, size: 0.5))
+                at.position = SCNVector3Make(self.Atoms[i].coordinates[0], self.Atoms[i].coordinates[1] , self.Atoms[i].coordinates[2])
+                self.Atoms[i].node = at
+                atomsNode.addChildNode(at)
+            }
+        }
+        if ballnstick {
+            atomsNode.addChildNode(setCylinders())
         }
         
         return atomsNode
+    }
+    
+    func setCylinders() -> SCNNode {
+        let cylindersNode = SCNNode()
+        for atom in self.Atoms {
+            for co in atom.connections {
+                let tmp = self.Atoms[co - 1].node!.position
+                let cyl = SCNCylinder(radius: 0.1, height: CGFloat(atom.node!.position.distance(tmp)))
+                let node = SCNNode(geometry: cyl)
+                cylindersNode.addChildNode(node)
+            }
+        }
+        return cylindersNode
     }
     
     func sceneSetup() {
@@ -124,71 +165,54 @@ class ProteinViewController: UIViewController {
         ambientLightNode.light!.type = SCNLight.LightType.ambient
         ambientLightNode.light!.color = UIColor(white: 0.67, alpha: 1.0)
         scene.rootNode.addChildNode(ambientLightNode)
-//
+        
         let omniLightNode = SCNNode()
         omniLightNode.light = SCNLight()
         omniLightNode.light!.type = SCNLight.LightType.omni
         omniLightNode.light!.color = UIColor(white: 0.75, alpha: 1.0)
         omniLightNode.position = SCNVector3Make(0, 50, 50)
         scene.rootNode.addChildNode(omniLightNode)
-//
-//        let cameraNode = SCNNode()
-//        cameraNode.camera = SCNCamera()
-//        cameraNode.position = SCNVector3Make(0, 0, 25)
-//        scene.rootNode.addChildNode(cameraNode)
-        // 2
-        
-//        let boxGeometry = SCNBox(width: 10.0, height: 10.0, length: 10.0, chamferRadius: 1.0)
-//        let boxNode = SCNNode(geometry: boxGeometry)
-//        scene.rootNode.addChildNode(boxNode)
-//        
-//        
-//        geometryNode = boxNode
-        
-//        let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:)))
-//        sceneView.addGestureRecognizer(panRecognizer)
-        // 3
+
         sceneView.scene = scene
         sceneView.autoenablesDefaultLighting = true
         sceneView.allowsCameraControl = true
-
+        
     }
     
-  /*  override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        let Url = "http://ligand-expo.rcsb.org/reports/\(ligVal![ligVal!.index(ligVal!.startIndex, offsetBy: 0)])/\(ligVal!)/\(ligVal!)_ideal.pdb"
-        
-        // Start background thread so that image loading does not make app unresponsive
-        guard let myURL = URL(string: Url) else {
-            print("Error: \(Url) doesn't seem to be a valid URL")
-            return
+    @IBAction func segmentedControlAction(_ sender: UISegmentedControl) {
+        switch (sender.selectedSegmentIndex) {
+        case 0: // baals & stick
+            geometryNode.removeFromParentNode()
+            geometryNode = self.allAtoms()
+            sceneView.scene!.rootNode.addChildNode(geometryNode)
+            break
+        case 1:
+            geometryNode.removeFromParentNode()
+            geometryNode = self.allAtoms(ballnstick: false)
+            sceneView.scene!.rootNode.addChildNode(geometryNode)
+            break
+        default :
+            
+            geometryNode = self.allAtoms()
+            sceneView.scene!.rootNode.addChildNode(geometryNode)
+            break
         }
-        
-        do {
-            let myHTMLString = try String(contentsOf: myURL, encoding: .ascii)
-//            print("HTML : \(myHTMLString)")
-            pdbFile = myHTMLString
-            let parser = Parser(pdb: pdbFile!)
-            parser.parse()
-            self.Atoms = parser.atoms
-            print(parser.lines[0])
-            print(parser.atoms[0])
-        } catch let error {
-            print("Error: \(error)")
-        }
-    }*/
-
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
     }
-    */
-    
 
+
+}
+
+private extension SCNVector3{
+    func distance(_ receiver:SCNVector3) -> Float{
+        let xd = receiver.x - self.x
+        let yd = receiver.y - self.y
+        let zd = receiver.z - self.z
+        let distance = Float(sqrt(xd * xd + yd * yd + zd * zd))
+        
+        if (distance < 0){
+            return (distance * -1)
+        } else {
+            return (distance)
+        }
+    }
 }
