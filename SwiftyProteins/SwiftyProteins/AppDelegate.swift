@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.rootViewController = initialViewControlleripad
         self.window?.makeKeyAndVisible()
-        
+//        UIApplication.sharedApplication().keyWindow?.rootViewController = storyboard!.instantiateViewControllerWithIdentifier("Root_View")
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {

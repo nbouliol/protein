@@ -189,11 +189,21 @@
                                     <action selector="segmentedControlAction:" destination="WE4-Qt-v6k" eventType="valueChanged" id="6zS-GE-jXD"/>
                                 </connections>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yoU-cM-fUu">
+                                <rect key="frame" x="345" y="68" width="30" height="30"/>
+                                <state key="normal" title="✉️"/>
+                                <connections>
+                                    <action selector="shareButton:" destination="WE4-Qt-v6k" eventType="touchUpInside" id="qXd-NE-TyS"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="yoU-cM-fUu" firstAttribute="top" secondItem="q4u-pr-oWh" secondAttribute="bottom" constant="4" id="1aS-JQ-uD8"/>
+                            <constraint firstItem="yg5-zL-ntn" firstAttribute="top" secondItem="yoU-cM-fUu" secondAttribute="bottom" constant="3" id="Hxb-Nm-MB8"/>
                             <constraint firstAttribute="trailing" secondItem="yg5-zL-ntn" secondAttribute="trailing" id="Ih3-zd-QVt"/>
                             <constraint firstItem="yg5-zL-ntn" firstAttribute="top" secondItem="m1H-jl-dCb" secondAttribute="bottom" constant="-31" id="K2G-KZ-Syw"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="yoU-cM-fUu" secondAttribute="trailing" constant="-16" id="NYg-gk-UUn"/>
                             <constraint firstItem="yg5-zL-ntn" firstAttribute="bottom" secondItem="KAa-eI-YbH" secondAttribute="top" id="Rbt-Y0-vxG"/>
                             <constraint firstItem="X7a-0C-Khu" firstAttribute="centerX" secondItem="tCG-rV-zsl" secondAttribute="centerX" constant="-150.5" id="W3p-Cp-17S"/>
                             <constraint firstItem="yg5-zL-ntn" firstAttribute="top" secondItem="X7a-0C-Khu" secondAttribute="bottom" constant="8" symbolic="YES" id="Y3o-gQ-UCX"/>

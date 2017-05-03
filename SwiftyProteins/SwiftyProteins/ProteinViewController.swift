@@ -20,8 +20,20 @@ class ProteinViewController: UIViewController {
     @IBOutlet weak var showAtom: UILabel!
     var geometryNode: SCNNode = SCNNode()
     
-    // Gestures
-    var currentAngle: Float = 0.0
+    @IBAction func shareButton(_ sender: Any) {
+        
+        // set up activity view controller
+        let imageToShare = sceneView.snapshot()
+        let defaultText = "I want to share with you this protein : \(ligVal!) - Generated with SwiftyProteins"
+        let activityViewController = UIActivityViewController(activityItems: [imageToShare, defaultText], applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+        
+        // exclude some activity types from the list (optional)
+//        activityViewController.excludedActivityTypes = [ UIActivityType.airDrop, UIActivityType.postToFacebook ]
+        
+        // present the view controller
+        self.present(activityViewController, animated: true, completion: nil)
+    }
 
     func loadNparse() {
         let Url = "http://ligand-expo.rcsb.org/reports/\(ligVal![ligVal!.index(ligVal!.startIndex, offsetBy: 0)])/\(ligVal!)/\(ligVal!)_ideal.pdb"
@@ -62,19 +74,16 @@ class ProteinViewController: UIViewController {
     }
 
     @IBOutlet weak var testLabel: UILabel!
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    
     func panGesture(_ gesture: UIPanGestureRecognizer) {
         let translation = gesture.translation(in: gesture.view!)
         var newAngle = (Float)(translation.x)*(Float)(M_PI)/180.0
-        newAngle += currentAngle
+//        newAngle += currentAngle
         
         geometryNode.transform = SCNMatrix4MakeRotation(newAngle, 0, 1, 0)
         
         if(gesture.state == UIGestureRecognizerState.ended) {
-            currentAngle = newAngle
+//            currentAngle = newAngle
         }
     }
     
@@ -116,12 +125,14 @@ class ProteinViewController: UIViewController {
         let at = SCNSphere(radius: CGFloat(size))
         at.firstMaterial!.diffuse.contents = color
         at.firstMaterial?.specular.contents = color == .white ? UIColor.darkGray : UIColor.white
+        
         return at
     }
     
     func allAtoms(ballnstick: Bool = true) -> SCNNode {
         let atomsNode = SCNNode()
 
+        
         for i in 0..<self.Atoms.count {
             if !ballnstick {
                 let at = SCNNode(geometry: self.atom(color: self.Atoms[i].color, size: 1))
@@ -136,22 +147,27 @@ class ProteinViewController: UIViewController {
             }
         }
         if ballnstick {
-            atomsNode.addChildNode(setCylinders())
+            atomsNode.addChildNode(setCylinders(atomsNode: atomsNode))
         }
         
         return atomsNode
     }
     
-    func setCylinders() -> SCNNode {
+    func setCylinders(atomsNode:SCNNode) -> SCNNode {
         let cylindersNode = SCNNode()
-        for atom in self.Atoms {
+       for atom in self.Atoms {
+
             for co in atom.connections {
-                let tmp = self.Atoms[co - 1].node!.position
-                let cyl = SCNCylinder(radius: 0.1, height: CGFloat(atom.node!.position.distance(tmp)))
-                let node = SCNNode(geometry: cyl)
-                cylindersNode.addChildNode(node)
+                let from = atom
+                let to = Atoms[co - 1]
+                
+                let cyl = CylinderLine(parent: cylindersNode, v1: (from.node?.position)!, v2: (to.node?.position)!, radius: 0.1, radSegmentCount: 180, color: UIColor.lightGray)
+                cylindersNode.addChildNode(cyl)
+
             }
         }
+        
+        
         return cylindersNode
     }
     
@@ -169,7 +185,7 @@ class ProteinViewController: UIViewController {
         let omniLightNode = SCNNode()
         omniLightNode.light = SCNLight()
         omniLightNode.light!.type = SCNLight.LightType.omni
-        omniLightNode.light!.color = UIColor(white: 0.75, alpha: 1.0)
+        omniLightNode.light!.color = UIColor(white: 1, alpha: 1.0)
         omniLightNode.position = SCNVector3Make(0, 50, 50)
         scene.rootNode.addChildNode(omniLightNode)
 
@@ -200,6 +216,60 @@ class ProteinViewController: UIViewController {
     }
 
 
+}
+
+class   CylinderLine: SCNNode
+{
+    init( parent: SCNNode,//Needed to line to your scene
+        v1: SCNVector3,//Source
+        v2: SCNVector3,//Destination
+        radius: CGFloat,// Radius of the cylinder
+        radSegmentCount: Int, // Number of faces of the cylinder
+        color: UIColor )// Color of the cylinder
+    {
+        super.init()
+        
+        //Calcul the height of our line
+        let  height = v1.distance(v2)
+        
+        //set position to v1 coordonate
+        position = v1
+        
+        //Create the second node to draw direction vector
+        let nodeV2 = SCNNode()
+        
+        //define his position
+        nodeV2.position = v2
+        //add it to parent
+        parent.addChildNode(nodeV2)
+        
+        //Align Z axis
+        let zAlign = SCNNode()
+        zAlign.eulerAngles.x = Float(CGFloat(M_PI_2))
+        
+        //create our cylinder
+        let cyl = SCNCylinder(radius: radius, height: CGFloat(height))
+        cyl.radialSegmentCount = radSegmentCount
+        cyl.firstMaterial?.diffuse.contents = color
+        
+        //Create node with cylinder
+        let nodeCyl = SCNNode(geometry: cyl )
+        nodeCyl.position.y = -height/2
+        zAlign.addChildNode(nodeCyl)
+        
+        //Add it to child
+        addChildNode(zAlign)
+        
+        //set constraint direction to our vector
+        constraints = [SCNLookAtConstraint(target: nodeV2)]
+    }
+    
+    override init() {
+        super.init()
+    }
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 }
 
 private extension SCNVector3{
