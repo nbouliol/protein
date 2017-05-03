@@ -19,6 +19,7 @@ class ProteinViewController: UIViewController {
     var printedAtom : String = ""
     @IBOutlet weak var showAtom: UILabel!
     var geometryNode: SCNNode = SCNNode()
+    var animate : Bool = false
     
     @IBOutlet weak var navItem: UINavigationItem!
     
@@ -35,7 +36,11 @@ class ProteinViewController: UIViewController {
         // present the view controller
         self.present(activityViewController, animated: true, completion: nil)
     }
-
+    @IBAction func animateButton(_ sender: UIButton) {
+        animate = !animate
+        print(animate)
+    }
+    
     func loadNparse() {
         let Url = "http://ligand-expo.rcsb.org/reports/\(ligVal![ligVal!.index(ligVal!.startIndex, offsetBy: 0)])/\(ligVal!)/\(ligVal!)_ideal.pdb"
         

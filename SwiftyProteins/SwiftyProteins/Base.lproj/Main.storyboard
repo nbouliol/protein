@@ -167,16 +167,6 @@
                             <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yg5-zL-ntn">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                             </sceneKitView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bUG-Zj-mb3">
-                                <rect key="frame" x="43" y="631" width="263" height="29"/>
-                                <segments>
-                                    <segment title="Balls and Stick"/>
-                                    <segment title="Packing of Spheres"/>
-                                </segments>
-                                <connections>
-                                    <action selector="segmentedControlAction:" destination="WE4-Qt-v6k" eventType="valueChanged" id="6zS-GE-jXD"/>
-                                </connections>
-                            </segmentedControl>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m1H-jl-dCb">
                                 <rect key="frame" x="16" y="72" width="343" height="20"/>
                                 <constraints>
@@ -187,16 +177,35 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bUG-Zj-mb3">
+                                <rect key="frame" x="56" y="631" width="263" height="29"/>
+                                <segments>
+                                    <segment title="Balls and Stick"/>
+                                    <segment title="Packing of Spheres"/>
+                                </segments>
+                                <connections>
+                                    <action selector="segmentedControlAction:" destination="WE4-Qt-v6k" eventType="valueChanged" id="6zS-GE-jXD"/>
+                                </connections>
+                            </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jHZ-HZ-Ypy">
+                                <rect key="frame" x="327" y="631" width="30" height="30"/>
+                                <state key="normal" title="💥"/>
+                                <connections>
+                                    <action selector="animateButton:" destination="WE4-Qt-v6k" eventType="touchUpInside" id="mG6-Wm-voU"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="KAa-eI-YbH" firstAttribute="top" secondItem="bUG-Zj-mb3" secondAttribute="bottom" constant="8" symbolic="YES" id="6fX-Gt-pwv"/>
                             <constraint firstItem="yg5-zL-ntn" firstAttribute="bottom" secondItem="KAa-eI-YbH" secondAttribute="top" id="DjD-Se-dsS"/>
-                            <constraint firstItem="KAa-eI-YbH" firstAttribute="top" secondItem="bUG-Zj-mb3" secondAttribute="bottom" constant="8" symbolic="YES" id="HwZ-za-reK"/>
+                            <constraint firstItem="bUG-Zj-mb3" firstAttribute="centerX" secondItem="m1H-jl-dCb" secondAttribute="centerX" id="Ecl-44-b3Z"/>
+                            <constraint firstItem="jHZ-HZ-Ypy" firstAttribute="top" secondItem="yg5-zL-ntn" secondAttribute="bottom" constant="-36" id="KPO-2l-BcF"/>
+                            <constraint firstItem="jHZ-HZ-Ypy" firstAttribute="leading" secondItem="bUG-Zj-mb3" secondAttribute="trailing" constant="8" id="UsS-41-war"/>
                             <constraint firstItem="m1H-jl-dCb" firstAttribute="top" secondItem="q4u-pr-oWh" secondAttribute="bottom" constant="8" symbolic="YES" id="UyU-nt-0JB"/>
                             <constraint firstItem="yg5-zL-ntn" firstAttribute="top" secondItem="q4u-pr-oWh" secondAttribute="bottom" id="YXu-w2-gOD"/>
                             <constraint firstItem="m1H-jl-dCb" firstAttribute="centerX" secondItem="tCG-rV-zsl" secondAttribute="centerX" id="dCJ-uy-Xob"/>
                             <constraint firstItem="m1H-jl-dCb" firstAttribute="centerX" secondItem="yg5-zL-ntn" secondAttribute="centerX" id="oCS-z8-Bdi"/>
-                            <constraint firstItem="bUG-Zj-mb3" firstAttribute="leading" secondItem="tCG-rV-zsl" secondAttribute="leadingMargin" constant="27" id="qPm-ej-A0r"/>
                             <constraint firstItem="yg5-zL-ntn" firstAttribute="leading" secondItem="tCG-rV-zsl" secondAttribute="leading" id="yew-16-JYg"/>
                         </constraints>
                     </view>
