@@ -33,7 +33,9 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         
     }
 
-
+    @IBAction func unwindSegue(segue: UIStoryboardSegue){
+        
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -63,7 +65,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-     
+        
         if (searchActive) {
             if searchResult.count == 0 {
                 return self.liguands.count
@@ -112,6 +114,8 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
             if searchResult.count == 0 {
                 cell.textLabel?.text = liguands[indexPath.row]
             } else {
+                print(searchResult, searchResult.count)
+                print(indexPath.row)
                 cell.textLabel?.text = searchResult[indexPath.row]
             }
         } else {
@@ -170,6 +174,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         // Pass the selected object to the new view controller.
         if segue.identifier == "segueToProtein" {
             if let dest = segue.destination as? ProteinViewController {
+//                searchActive = false
                 dest.ligVal = self.currentLigand!
             }
         }

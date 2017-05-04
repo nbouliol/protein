@@ -41,6 +41,7 @@ class ProteinViewController: UIViewController {
         print(animate)
     }
     
+    
     func loadNparse() {
         let Url = "http://ligand-expo.rcsb.org/reports/\(ligVal![ligVal!.index(ligVal!.startIndex, offsetBy: 0)])/\(ligVal!)/\(ligVal!)_ideal.pdb"
         
@@ -62,7 +63,10 @@ class ProteinViewController: UIViewController {
             print(parser.lines[0])
             print(parser.atoms[0])
         } catch let error {
+            ft_alert(title: "Error", msg: "\(ligVal!) cannot be found", dismiss: "Go back", style: .destructive)
             print("Error: \(error)")
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+//            performSegue(withIdentifier: "backSegue", sender: self)
         }
     }
     
@@ -106,6 +110,8 @@ class ProteinViewController: UIViewController {
             if let tappedAtom = findAtomWithCoordinates(coords: [result.node.position.x, result.node.position.y, result.node.position.z]) {
                 print(tappedAtom.name)
                 showAtom.text = "Touched atom : \(tappedAtom.name)"
+            } else {
+                showAtom.text = ""
             }
         } else {
             showAtom.text = ""
@@ -115,6 +121,8 @@ class ProteinViewController: UIViewController {
 //    https://www.raywenderlich.com/83748/beginning-scene-kit-tutorial
 //    https://www.raywenderlich.com/128728/scene-kit-tutorial-swift-part-4-render-loop
 //    http://stackoverflow.com/questions/30190171/scenekit-object-between-two-points
+    
+    
     func atom(color: UIColor, size: Float) -> SCNGeometry {
         let at = SCNSphere(radius: CGFloat(size))
         at.firstMaterial!.diffuse.contents = color
@@ -123,11 +131,14 @@ class ProteinViewController: UIViewController {
         return at
     }
     
-    func allAtoms(ballnstick: Bool = true) -> SCNNode {
+    func allAtoms(ballnstick: Bool = true, hydrogen: Bool = true) -> SCNNode {
         let atomsNode = SCNNode()
 
         
         for i in 0..<self.Atoms.count {
+            if !hydrogens && self.Atoms[i].name == "Hydrogen" {
+                continue
+            }
             if !ballnstick {
                 let at = SCNNode(geometry: self.atom(color: self.Atoms[i].color, size: 0.9))
                 at.position = SCNVector3Make(self.Atoms[i].coordinates[0], self.Atoms[i].coordinates[1], self.Atoms[i].coordinates[2])
@@ -154,7 +165,9 @@ class ProteinViewController: UIViewController {
             for co in atom.connections {
                 let from = atom
                 let to = Atoms[co - 1]
-                
+                if !hydrogens && (from.name == "Hydrogen" || to.name == "Hydrogen")  {
+                    continue
+                }
                 let cyl = CylinderLine(parent: cylindersNode, v1: (from.node?.position)!, v2: (to.node?.position)!, radius: 0.1, radSegmentCount: 180, color: UIColor.lightGray)
                 cylindersNode.addChildNode(cyl)
 
@@ -194,12 +207,14 @@ class ProteinViewController: UIViewController {
         case 0: // baals & stick
             geometryNode.removeFromParentNode()
             geometryNode = self.allAtoms()
+            bns = true
             sceneView.scene!.rootNode.addChildNode(geometryNode)
             break
         case 1:
             geometryNode.removeFromParentNode()
             geometryNode = self.allAtoms(ballnstick: false)
             sceneView.scene!.rootNode.addChildNode(geometryNode)
+            bns = false
             break
         default :
             
@@ -208,7 +223,25 @@ class ProteinViewController: UIViewController {
             break
         }
     }
+    var hydrogens : Bool = true
+    var bns : Bool = true
+    @IBAction func hydeHydro(_ sender: UIButton) {
+        hydrogens = !hydrogens
+        geometryNode.removeFromParentNode()
+        geometryNode = self.allAtoms(ballnstick: bns, hydrogen: false)
+        sceneView.scene!.rootNode.addChildNode(geometryNode)
+    }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "backSegue" {
+            if let view = segue.destination as? ListViewController {
+                print("caca")
+                view.liguands = view.liguands.filter() { $0 != ligVal! }
+                print(view.liguands[0])
+                view.listOfLiguands.reloadData()
+            }
+        }
+    }
 
 }
 
@@ -263,6 +296,14 @@ class   CylinderLine: SCNNode
     }
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+}
+
+private extension UIViewController {
+    func ft_alert(title : String, msg : String, dismiss : String, style: UIAlertActionStyle = .default) {
+        let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: dismiss, style: style, handler: {(alert: UIAlertAction!) in self.performSegue(withIdentifier: "backSegue", sender: self)}))
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
