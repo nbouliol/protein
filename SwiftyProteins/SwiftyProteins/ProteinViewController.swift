@@ -133,6 +133,11 @@ class ProteinViewController: UIViewController {
             if let tappedAtom = findAtomWithCoordinates(coords: [result.node.position.x, result.node.position.y, result.node.position.z]) {
                 print(tappedAtom.name)
                 showAtom.text = "Touched atom : \(tappedAtom.name)"
+//                showAtom.backgroundColor = .white
+                showAtom.layer.shadowOffset = CGSize(width: 0, height: 0)
+                showAtom.layer.shadowColor = UIColor.white.cgColor
+                showAtom.layer.shadowOpacity = 1
+                showAtom.layer.shadowRadius = 3
             } else {
                 showAtom.text = ""
             }
