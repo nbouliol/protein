@@ -18,6 +18,8 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
 //    let searchController = UISearchController(searchResultsController: nil)
 //    @IBOutlet weak var searchText: UISearchBar!
 
+    var dic = [String : Any?]()
+    
     var liguands : [String] = []
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +35,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         
     }
 
+    
     @IBAction func unwindSegue(segue: UIStoryboardSegue){
         
     }
@@ -106,20 +109,38 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
     
     
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = listOfLiguands.dequeueReusableCell(withIdentifier: "liguandCell", for: indexPath)
+        let cell = listOfLiguands.dequeueReusableCell(withIdentifier: "liguandCell", for: indexPath) as! ligandTableViewCell
+        let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        activityView.color = UIColor.random()
+        activityView.center = CGPoint(x:(cell.ligMage.frame.size.width / 2),y: (cell.ligMage.frame.size.height / 2))
+        activityView.startAnimating()
+        cell.ligMage.addSubview(activityView)
         
 //        cell.tuple = (useri?.projects![indexPath.row]["project"]["name"].string, useri?.projects?[indexPath.row]["final_mark"].int)
         if (searchActive) {
             if searchResult.count == 0 {
-                cell.textLabel?.text = liguands[indexPath.row]
+                cell.ligName.text = liguands[indexPath.row]
+                let lig = liguands[indexPath.row]
+                let firstChar = lig.characters.first!
+                let url = "https://cdn.rcsb.org/images/ligands/\(firstChar)/\(lig)/\(lig)-large.png"
+                cell.ligMage.downloadedFrom(url: URL.init(string: url)!, activityView: activityView)
             } else {
-                print(searchResult, searchResult.count)
-                print(indexPath.row)
-                cell.textLabel?.text = searchResult[indexPath.row]
+//                print(searchResult, searchResult.count)
+//                print(indexPath.row)
+                cell.ligName.text = searchResult[indexPath.row]
+                let lig = searchResult[indexPath.row]
+                let firstChar = lig.characters.first!
+                let url = "https://cdn.rcsb.org/images/ligands/\(firstChar)/\(lig)/\(lig)-large.png"
+                cell.ligMage.downloadedFrom(url: URL.init(string: url)!, activityView: activityView)
             }
         } else {
-            cell.textLabel?.text = liguands[indexPath.row]
+            cell.ligName.text = liguands[indexPath.row]
+            let lig = liguands[indexPath.row]
+            let firstChar = lig.characters.first!
+            let url = "https://cdn.rcsb.org/images/ligands/\(firstChar)/\(lig)/\(lig)-large.png"
+            cell.ligMage.downloadedFrom(url: URL.init(string: url)!, activityView: activityView)
         }
         return cell
         
@@ -182,3 +203,4 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
  
 
 }
+

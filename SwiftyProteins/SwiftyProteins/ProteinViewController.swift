@@ -20,6 +20,7 @@ class ProteinViewController: UIViewController {
     @IBOutlet weak var showAtom: UILabel!
     var geometryNode: SCNNode = SCNNode()
     var animate : Bool = false
+    var connections : [Connection] = []
     
     @IBOutlet weak var navItem: UINavigationItem!
     
@@ -36,9 +37,31 @@ class ProteinViewController: UIViewController {
         // present the view controller
         self.present(activityViewController, animated: true, completion: nil)
     }
-    @IBAction func animateButton(_ sender: UIButton) {
-        animate = !animate
-        print(animate)
+    @IBAction func liaisonButton(_ sender: UIButton) {
+        let Url = "https://files.rcsb.org/ligands/view/\(ligVal!)_ideal.sdf"
+        
+        guard let myURL = URL(string: Url) else {
+            print("Error: \(Url) doesn't seem to be a valid URL")
+            return
+        }
+        
+        do {
+            UIApplication.shared.isNetworkActivityIndicatorVisible = true
+            let myHTMLString = try String(contentsOf: myURL, encoding: .ascii)
+            //            print("HTML : \(myHTMLString)")
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            pdbFile = myHTMLString
+            self.connections = Parser.covalent(sdf: pdbFile!)
+        } catch let error {
+            ft_alert(title: "Error", msg: "\(ligVal!) cannot be found", dismiss: "Go back", style: .destructive)
+            print("Error: \(error)")
+            UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            //            performSegue(withIdentifier: "backSegue", sender: self)
+        }
+        geometryNode.removeFromParentNode()
+        geometryNode = self.allAtoms(ballnstick: bns, hydrogen: hydrogens)
+        sceneView.scene!.rootNode.addChildNode(geometryNode)
+        sender.isHidden = true
     }
     
     
@@ -60,8 +83,8 @@ class ProteinViewController: UIViewController {
             let parser = Parser(pdb: pdbFile!)
             parser.parse()
             self.Atoms = parser.atoms
-            print(parser.lines[0])
-            print(parser.atoms[0])
+//            print(parser.lines[0])
+//            print(parser.atoms[0])
         } catch let error {
             ft_alert(title: "Error", msg: "\(ligVal!) cannot be found", dismiss: "Go back", style: .destructive)
             print("Error: \(error)")
@@ -162,6 +185,7 @@ class ProteinViewController: UIViewController {
         let cylindersNode = SCNNode()
        for atom in self.Atoms {
 
+        if connections.isEmpty {
             for co in atom.connections {
                 let from = atom
                 let to = Atoms[co - 1]
@@ -172,6 +196,17 @@ class ProteinViewController: UIViewController {
                 cylindersNode.addChildNode(cyl)
 
             }
+        } else {
+            for co in connections {
+                let from = Atoms[co.from - 1]
+                let to = Atoms[co.to - 1]
+                if !hydrogens && (from.name == "Hydrogen" || to.name == "Hydrogen")  {
+                    continue
+                }
+                let cyl = CylinderLine(parent: cylindersNode, v1: (from.node?.position)!, v2: (to.node?.position)!, radius: 0.1, radSegmentCount: 180, color: UIColor.lightGray, connection: co.number)
+                cylindersNode.addChildNode(cyl)
+            }
+        }
         }
         
         
@@ -252,7 +287,8 @@ class   CylinderLine: SCNNode
         v2: SCNVector3,//Destination
         radius: CGFloat,// Radius of the cylinder
         radSegmentCount: Int, // Number of faces of the cylinder
-        color: UIColor )// Color of the cylinder
+        color: UIColor,
+        connection: Int = 1)// Color of the cylinder
     {
         super.init()
         
@@ -283,6 +319,29 @@ class   CylinderLine: SCNNode
         let nodeCyl = SCNNode(geometry: cyl )
         nodeCyl.position.y = -height/2
         zAlign.addChildNode(nodeCyl)
+        
+        if (connection == 2) {
+            nodeCyl.position.x = -0.2
+            
+            let nodeCyl2 = SCNNode(geometry: cyl)
+            nodeCyl2.position.y = -height/2
+            nodeCyl2.position.x = 0.2
+            zAlign.addChildNode(nodeCyl2)
+        } else if (connection == 3) {
+            nodeCyl.position.x = -0.07
+            nodeCyl.position.z = -0.07
+            
+            let nodeCyl2 = SCNNode(geometry: cyl)
+            nodeCyl2.position.y = -height/2
+            nodeCyl2.position.x = 0.07
+            nodeCyl2.position.z = -0.07
+            let nodeCyl3 = SCNNode(geometry: cyl)
+            nodeCyl3.position.y = -height/2
+            nodeCyl3.position.z = 0.07
+            
+            zAlign.addChildNode(nodeCyl2)
+            zAlign.addChildNode(nodeCyl3)
+        }
         
         //Add it to child
         addChildNode(zAlign)

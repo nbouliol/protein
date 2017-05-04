@@ -14,7 +14,6 @@ class Parser {
     var lines : [String]
     var atoms : [Atom] = []
     
-    
     init(pdb:String) {
         self.pdbFile = pdb
         self.lines = self.pdbFile.components(separatedBy: .newlines)
@@ -46,4 +45,30 @@ class Parser {
             }
         }
     }
+    
+    class func covalent (sdf: String) -> [Connection] {
+        var connections : [Connection] = []
+        var lines = sdf.components(separatedBy: .newlines)
+        lines.removeFirst()
+        lines.removeFirst()
+        lines.removeFirst()
+//        print(lines[0].components(separatedBy: .whitespaces)[0])
+        print("cacacacacca")
+        print(lines[0].components(separatedBy: .whitespaces))
+        let nbAtom = Int(lines[0].components(separatedBy: .whitespaces)[1])
+        lines.removeFirst()
+        for _ in 0..<nbAtom! {
+            lines.removeFirst()
+        }
+        lines.removeLast()
+        lines.removeLast()
+        lines.removeLast()
+        for line in lines {
+            var arr = line.components(separatedBy: .whitespaces)
+            arr = arr.filter() { $0 != "" }
+            connections.append(Connection(f: Int(arr[0])!, t: Int(arr[1])!, n: Int(arr[2])!))
+        }
+        return connections
+    }
+
 }

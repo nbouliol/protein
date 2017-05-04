@@ -11,9 +11,11 @@ import Foundation
 struct Connection {
     var from : Int
     var to : Int
+    var number : Int
     
-    init(f:Int, t:Int) {
+    init(f:Int, t:Int, n:Int) {
         from = f
         to = t
+        number = n
     }
 }

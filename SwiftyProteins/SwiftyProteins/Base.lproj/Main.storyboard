@@ -104,11 +104,11 @@ segue apres error reloadTableView</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wHF-VK-ZgL">
-                                <rect key="frame" x="16" y="64" width="343" height="595"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="97" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="wHF-VK-ZgL">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <searchBar key="tableHeaderView" contentMode="redraw" id="cLh-fw-zvq">
-                                    <rect key="frame" x="0.0" y="0.0" width="343" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                     <textInputTraits key="textInputTraits"/>
                                     <connections>
@@ -116,32 +116,51 @@ segue apres error reloadTableView</string>
                                     </connections>
                                 </searchBar>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="liguandCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="liguandCell" textLabel="74R-Qv-bvZ" style="IBUITableViewCellStyleDefault" id="isp-yn-dqD">
-                                        <rect key="frame" x="0.0" y="72" width="343" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="liguandCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="liguandCell" rowHeight="97" id="isp-yn-dqD" customClass="ligandTableViewCell" customModule="SwiftyProteins" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="375" height="97"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="isp-yn-dqD" id="cyv-g5-YX2">
-                                            <rect key="frame" x="0.0" y="0.0" width="343" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="74R-Qv-bvZ">
-                                                    <rect key="frame" x="15" y="0.0" width="313" height="43"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pBA-zV-UXM">
+                                                    <rect key="frame" x="8" y="38" width="57" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="57" id="Pcj-YK-XzC"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="n91-JC-FfS">
+                                                    <rect key="frame" x="270" y="4" width="90" height="90"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="90" id="fJY-bH-n7I"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="n91-JC-FfS" firstAttribute="centerY" secondItem="cyv-g5-YX2" secondAttribute="centerY" constant="0.5" id="7gN-Fy-aNt"/>
+                                                <constraint firstItem="pBA-zV-UXM" firstAttribute="centerY" secondItem="cyv-g5-YX2" secondAttribute="centerY" id="Lx5-WN-xCF"/>
+                                                <constraint firstItem="n91-JC-FfS" firstAttribute="trailing" secondItem="cyv-g5-YX2" secondAttribute="trailingMargin" constant="-7" id="OUG-Qx-DqG"/>
+                                                <constraint firstItem="pBA-zV-UXM" firstAttribute="leading" secondItem="cyv-g5-YX2" secondAttribute="leadingMargin" id="W42-79-3q5"/>
+                                                <constraint firstItem="n91-JC-FfS" firstAttribute="top" secondItem="cyv-g5-YX2" secondAttribute="top" constant="4" id="tnz-De-S6H"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="ligMage" destination="n91-JC-FfS" id="VXW-RT-kBk"/>
+                                            <outlet property="ligName" destination="pBA-zV-UXM" id="Be8-gN-ihB"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="wHF-VK-ZgL" firstAttribute="leading" secondItem="gNe-WU-daN" secondAttribute="leadingMargin" id="FPX-BT-rbN"/>
-                            <constraint firstItem="wHF-VK-ZgL" firstAttribute="top" secondItem="cB4-zZ-xqM" secondAttribute="bottom" id="dVj-lH-FXw"/>
-                            <constraint firstItem="4Gi-GY-kYS" firstAttribute="top" secondItem="wHF-VK-ZgL" secondAttribute="bottom" constant="8" symbolic="YES" id="dvJ-ga-Vpn"/>
-                            <constraint firstItem="wHF-VK-ZgL" firstAttribute="trailing" secondItem="gNe-WU-daN" secondAttribute="trailingMargin" id="nF4-BW-HZQ"/>
+                            <constraint firstAttribute="trailing" secondItem="wHF-VK-ZgL" secondAttribute="trailing" id="NPb-ql-MJa"/>
+                            <constraint firstItem="wHF-VK-ZgL" firstAttribute="leading" secondItem="gNe-WU-daN" secondAttribute="leading" id="RP7-sW-GjL"/>
+                            <constraint firstItem="wHF-VK-ZgL" firstAttribute="bottom" secondItem="4Gi-GY-kYS" secondAttribute="top" id="XSR-Wc-4fY"/>
+                            <constraint firstItem="wHF-VK-ZgL" firstAttribute="top" secondItem="cB4-zZ-xqM" secondAttribute="bottom" id="hcc-db-6Z9"/>
                         </constraints>
                     </view>
                     <connections>
@@ -203,7 +222,7 @@ segue apres error reloadTableView</string>
                                 <rect key="frame" x="327" y="631" width="30" height="30"/>
                                 <state key="normal" title="💥"/>
                                 <connections>
-                                    <action selector="animateButton:" destination="WE4-Qt-v6k" eventType="touchUpInside" id="mG6-Wm-voU"/>
+                                    <action selector="liaisonButton:" destination="WE4-Qt-v6k" eventType="touchUpInside" id="4nT-Mb-Nhi"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i4r-bK-drR">
