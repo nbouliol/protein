@@ -321,7 +321,7 @@ class ProteinViewController: UIViewController {
             }
         }
     }
-
+    
 }
 
 class   CylinderLine: SCNNode

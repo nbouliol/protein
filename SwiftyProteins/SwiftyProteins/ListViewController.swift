@@ -27,6 +27,17 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         listOfLiguands.delegate = self
         listOfLiguands.dataSource = self
         searchBar.delegate = self
+
+        let viewCtrls = self.navigationController?.viewControllers
+        let count = viewCtrls?.count
+        if count != nil && count! > 1 {
+            if let loginCtrl = viewCtrls?[count! - 2] as? ViewController {
+                loginCtrl.loginButton.isEnabled =  true
+                loginCtrl.touchIdButton.isEnabled = true
+            }
+        }
+        
+
         
 //        searchController.searchResultsUpdater = self
 //        searchController.dimsBackgroundDuringPresentation = false
@@ -169,6 +180,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         }
         
     }
+    
     
 //    func filterContentForSearchText(searchText: String) {
 ////        // Filter the array using the filter method

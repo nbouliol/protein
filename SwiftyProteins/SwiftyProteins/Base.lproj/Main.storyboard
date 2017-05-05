@@ -55,7 +55,8 @@
                                 <rect key="frame" x="67" y="398" width="240" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <string key="text">back segue apres recherche
-segue apres error reloadTableView</string>
+segue apres error reloadTableView
+touch id 'enter password' crash</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -82,6 +83,7 @@ segue apres error reloadTableView</string>
                     </view>
                     <navigationItem key="navigationItem" id="au9-2w-34W"/>
                     <connections>
+                        <outlet property="loginButton" destination="oNQ-8U-Yh9" id="rbP-uy-7C8"/>
                         <outlet property="password" destination="EMx-br-MKw" id="qer-6v-YJg"/>
                         <outlet property="touchIdButton" destination="mMP-Lc-zu3" id="9jl-EK-JaT"/>
                         <outlet property="username" destination="T3s-P4-YOc" id="sJb-pt-cUY"/>
