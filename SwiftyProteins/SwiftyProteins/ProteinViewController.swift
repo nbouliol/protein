@@ -108,6 +108,16 @@ class ProteinViewController: UIViewController {
         // Do any additional setup after loading the view.
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapHandler(_:)))
         sceneView.addGestureRecognizer(tapRecognizer)
+        
+        let viewCtrls = self.navigationController?.viewControllers
+        let count = viewCtrls?.count
+        if count != nil && count! > 1 {
+            if let listCtrl = viewCtrls?[count! - 2] as? ListViewController {
+                listCtrl.searchActive = false
+                listCtrl.searchResult = []
+            }
+        }
+
     }
   
     func findAtomWithCoordinates(coords: [Float]) -> Atom? {

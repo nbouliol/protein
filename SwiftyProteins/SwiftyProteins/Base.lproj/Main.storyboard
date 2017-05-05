@@ -54,9 +54,8 @@
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="0dc-uw-fkp">
                                 <rect key="frame" x="67" y="398" width="240" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <string key="text">back segue apres recherche
-segue apres error reloadTableView
-touch id 'enter password' crash</string>
+                                <string key="text">back segue apres recherche -&gt; looks good
+segue apres error reloadTableView</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
