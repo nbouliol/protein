@@ -18,6 +18,8 @@ class ViewController: UIViewController {
         if username.text != nil && password.text != nil && username.text! != "" && password.text! != "" {
 //            self.showAlertWithTitle(title: "success", message: "GG")
             goToList()
+        } else {
+            ft_alert(title: "Unable to connect", msg: "Please specify both username and password", dismiss: "Ok, I'll try again")
         }
     }
     @IBOutlet weak var touchIdButton: UIButton!

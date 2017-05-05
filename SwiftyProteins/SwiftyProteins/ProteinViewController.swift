@@ -21,6 +21,7 @@ class ProteinViewController: UIViewController {
     var geometryNode: SCNNode = SCNNode()
     var animate : Bool = false
     var connections : [Connection] = []
+    var camera : SCNNode = SCNNode()
     
     @IBOutlet weak var navItem: UINavigationItem!
     
@@ -53,7 +54,7 @@ class ProteinViewController: UIViewController {
             pdbFile = myHTMLString
             self.connections = Parser.covalent(sdf: pdbFile!)
         } catch let error {
-            ft_alert(title: "Error", msg: "\(ligVal!) cannot be found", dismiss: "Go back", style: .destructive)
+            ft_alert(title: "Error", msg: "\(ligVal!) cannot be found", dismiss: "Go back", style: .destructive, backSegue: true)
             print("Error: \(error)")
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
             //            performSegue(withIdentifier: "backSegue", sender: self)
@@ -62,6 +63,7 @@ class ProteinViewController: UIViewController {
         geometryNode = self.allAtoms(ballnstick: bns, hydrogen: hydrogens)
         sceneView.scene!.rootNode.addChildNode(geometryNode)
         sender.isHidden = true
+        setAnimButtonsAsDefault()
     }
     
     
@@ -86,7 +88,7 @@ class ProteinViewController: UIViewController {
 //            print(parser.lines[0])
 //            print(parser.atoms[0])
         } catch let error {
-            ft_alert(title: "Error", msg: "\(ligVal!) cannot be found", dismiss: "Go back", style: .destructive)
+            ft_alert(title: "Error", msg: "\(ligVal!) cannot be found", dismiss: "Go back", style: .destructive, backSegue: true)
             print("Error: \(error)")
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
 //            performSegue(withIdentifier: "backSegue", sender: self)
@@ -218,6 +220,35 @@ class ProteinViewController: UIViewController {
         return cylindersNode
     }
     
+    func setAnimButtonsAsDefault() {
+        cycleButt.isHidden = false
+        stopAnimButton.isHidden = true
+    }
+    
+    @IBOutlet weak var cycleButt: UIButton!
+    @IBAction func cycleButton(_ sender: UIButton) {
+//        SCNTransaction.begin()
+//        let materials = geometryNode.geometry?.materials
+//        let material = materials?[0]
+//        material?.diffuse.contents = UIColor.white
+//        SCNTransaction.commit()
+        
+//        let action = SCNAction.moveBy(x: 0, y: 5, z: 5, duration: 5)
+        let action = SCNAction.rotateBy(x: 1, y: 2, z: 3, duration: 5)
+        let forever = SCNAction.repeatForever(action)
+        geometryNode.runAction(forever, forKey: "loopAction")
+//        animate = true
+        stopAnimButton.isHidden = false
+        sender.isHidden = true
+    }
+    @IBOutlet weak var stopAnimButton: UIButton!
+    @IBAction func stopAnim(_ sender: UIButton) {
+        geometryNode.action(forKey: "loopAction")?.speed = 0
+        sender.isHidden = true
+        cycleButt.isHidden = false
+    }
+    
+    
     func sceneSetup() {
         // 1
         let scene = SCNScene()
@@ -236,8 +267,13 @@ class ProteinViewController: UIViewController {
         omniLightNode.position = SCNVector3Make(0, 50, 50)
         scene.rootNode.addChildNode(omniLightNode)
 
+        let cameraNode = SCNNode()
+        cameraNode.camera = SCNCamera()
+        cameraNode.position = SCNVector3Make(0, 0, 50)
+        scene.rootNode.addChildNode(cameraNode)
+        
         sceneView.scene = scene
-        sceneView.autoenablesDefaultLighting = true
+//        sceneView.autoenablesDefaultLighting = true
         sceneView.allowsCameraControl = true
         
     }
@@ -249,12 +285,14 @@ class ProteinViewController: UIViewController {
             geometryNode = self.allAtoms()
             bns = true
             sceneView.scene!.rootNode.addChildNode(geometryNode)
+            setAnimButtonsAsDefault()
             break
         case 1:
             geometryNode.removeFromParentNode()
             geometryNode = self.allAtoms(ballnstick: false)
             sceneView.scene!.rootNode.addChildNode(geometryNode)
             bns = false
+            setAnimButtonsAsDefault()
             break
         default :
             
@@ -270,6 +308,7 @@ class ProteinViewController: UIViewController {
         geometryNode.removeFromParentNode()
         geometryNode = self.allAtoms(ballnstick: bns, hydrogen: false)
         sceneView.scene!.rootNode.addChildNode(geometryNode)
+        setAnimButtonsAsDefault()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -363,10 +402,19 @@ class   CylinderLine: SCNNode
     }
 }
 
-private extension UIViewController {
-    func ft_alert(title : String, msg : String, dismiss : String, style: UIAlertActionStyle = .default) {
+extension UIViewController {
+    func ft_alert(title : String, msg : String, dismiss : String, style: UIAlertActionStyle = .default, backSegue:Bool=false) {
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: dismiss, style: style, handler: {(alert: UIAlertAction!) in self.performSegue(withIdentifier: "backSegue", sender: self)}))
+        
+        if backSegue {
+            alert.addAction(UIAlertAction(title: dismiss, style: style, handler: {(alert: UIAlertAction!) in
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                self.performSegue(withIdentifier: "backSegue", sender: self)
+            }))
+        } else {
+            alert.addAction(UIAlertAction(title: dismiss, style: style, handler: nil))
+        }
+        
         self.present(alert, animated: true, completion: nil)
     }
 }
