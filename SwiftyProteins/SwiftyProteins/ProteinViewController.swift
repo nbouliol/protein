@@ -88,6 +88,12 @@ class ProteinViewController: UIViewController {
 //            print(parser.lines[0])
 //            print(parser.atoms[0])
         } catch let error {
+            if self.listViewCtrl != nil {
+                DispatchQueue.main.async {
+                    self.listViewCtrl!.liguands.remove(at: self.listViewCtrl!.liguands.index(of: self.ligVal!)!)
+                    self.listViewCtrl!.listOfLiguands.reloadData()
+                }
+            }
             ft_alert(title: "Error", msg: "\(ligVal!) cannot be found", dismiss: "Go back", style: .destructive, backSegue: true)
             print("Error: \(error)")
             UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -95,9 +101,29 @@ class ProteinViewController: UIViewController {
         }
     }
     
+    var listViewCtrl : ListViewController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let viewCtrls = self.navigationController?.viewControllers
+        let count = viewCtrls?.count
+        if count != nil && count! > 1 {
+            if let listCtrl = viewCtrls?[count! - 2] as? ListViewController {
+                listViewCtrl = listCtrl
+
+                listCtrl.searchActive = false
+                listCtrl.searchResult = []
+                listCtrl.listOfLiguands.reloadData()
+                
+                listCtrl.searchBar.text = nil
+                listCtrl.searchBar.setShowsCancelButton(false, animated: false)
+                
+                // Remove focus from the search bar.
+                listCtrl.searchBar.endEditing(true)
+            }
+        }
+        
         loadNparse()
 
         navItem.title = ligVal!
@@ -109,14 +135,7 @@ class ProteinViewController: UIViewController {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapHandler(_:)))
         sceneView.addGestureRecognizer(tapRecognizer)
         
-        let viewCtrls = self.navigationController?.viewControllers
-        let count = viewCtrls?.count
-        if count != nil && count! > 1 {
-            if let listCtrl = viewCtrls?[count! - 2] as? ListViewController {
-                listCtrl.searchActive = false
-                listCtrl.searchResult = []
-            }
-        }
+        
 
     }
   

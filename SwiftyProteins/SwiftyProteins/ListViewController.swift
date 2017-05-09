@@ -24,6 +24,9 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("ViewDidLoad + loadLiguands")
+        loadLiguands()
+        
         listOfLiguands.delegate = self
         listOfLiguands.dataSource = self
         searchBar.delegate = self
@@ -53,7 +56,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadLiguands()
+
     }
     
     
@@ -71,12 +74,15 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+//        searchBar.showsCancelButton = false
         searchActive = false;
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchActive = false;
     }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -119,8 +125,7 @@ class ListViewController: UIViewController,UITableViewDelegate, UITableViewDataS
         self.listOfLiguands.reloadData()
     }
     
-    
-    
+   
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = listOfLiguands.dequeueReusableCell(withIdentifier: "liguandCell", for: indexPath) as! ligandTableViewCell
         let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
