@@ -295,7 +295,7 @@ plus de navigation barre apres background</string>
         <!--Navigation Controller-->
         <scene sceneID="NGW-QY-dys">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="LTW-Js-U5Z" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="HomeNavigationController" automaticallyAdjustsScrollViewInsets="NO" id="LTW-Js-U5Z" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Gf6-Ti-UWe">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
