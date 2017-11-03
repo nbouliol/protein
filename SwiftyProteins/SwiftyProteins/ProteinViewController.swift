@@ -163,17 +163,27 @@ class ProteinViewController: UIViewController {
             // perform any actions you want on it
             if let tappedAtom = findAtomWithCoordinates(coords: [result.node.position.x, result.node.position.y, result.node.position.z]) {
                 print(tappedAtom.name)
-                showAtom.text = "Touched atom : \(tappedAtom.name)"
-//                showAtom.backgroundColor = .white
+//                showAtom.text = "Touched atom : \(tappedAtom.name)"
+                let myString:NSString = "Touched atom : \(tappedAtom.name)" as NSString
+                var myMutableString = NSMutableAttributedString()
+                myMutableString = NSMutableAttributedString(string: myString as String, attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!, NSForegroundColorAttributeName:tappedAtom.color])
+                myMutableString.addAttribute(NSForegroundColorAttributeName, value: UIColor.black, range: NSRange(location:0,length:14))
+                showAtom.attributedText = myMutableString
+//                showAtom.textColor = tappedAtom.color
+                let backgroundcolor:UIColor = tappedAtom.name == "Hydrogen" ? UIColor(red: 255/255, green: 87/255, blue: 0, alpha: 1) : .white
+                showAtom.backgroundColor = backgroundcolor
                 showAtom.layer.shadowOffset = CGSize(width: 0, height: 0)
-                showAtom.layer.shadowColor = UIColor.white.cgColor
+//                showAtom.layer.shadowColor = UIColor.white.cgColor
+//                showAtom.layer.shadowColor = tappedAtom.color.cgColor
                 showAtom.layer.shadowOpacity = 1
                 showAtom.layer.shadowRadius = 3
             } else {
                 showAtom.text = ""
+                showAtom.backgroundColor = UIColor(white: 1, alpha: 0)
             }
         } else {
             showAtom.text = ""
+            showAtom.backgroundColor = UIColor(white: 1, alpha: 0)
         }
     }
     
